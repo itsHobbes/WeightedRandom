@@ -2,13 +2,18 @@ package uk.co.markg.weightedrandom;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 
 public class ImmutableWeightedCollectionTest {
+
+  private static final int ITER = 1_000_000;
 
   @Test
   public void probabilitiesHigherThanOne() {
@@ -29,6 +34,32 @@ public class ImmutableWeightedCollectionTest {
   }
 
   @Test
+  public void newInstanceEmptyItemList() {
+    var items = new HashSet<String>();
+    var probs = List.of(.5d, .25d, .125d, .125d);
+    var exception = assertThrows(IllegalArgumentException.class,
+        () -> new ImmutableWeightedCollection<String>(items, probs));
+    assertEquals("Items cannot be empty.", exception.getMessage());
+  }
+
+  @Test
+  public void newInstanceEmptyProbsList() {
+    var items = Set.of("A", "B", "C", "D");
+    var probs = new ArrayList<Double>();
+    var exception = assertThrows(IllegalArgumentException.class,
+        () -> new ImmutableWeightedCollection<String>(items, probs));
+    assertEquals("Items cannot be empty.", exception.getMessage());
+  }
+
+  @Test
+  public void fromUnnormalisedDoubleEmptyMap() {
+    var items = new HashMap<String, Double>();
+    var exception = assertThrows(IllegalArgumentException.class,
+        () -> ImmutableWeightedCollection.fromUnnormalisedDoubleProbability(items));
+    assertEquals("Items cannot be empty.", exception.getMessage());
+  }
+
+  @Test
   public void fromUnnormalisedDoubleProbability() {
     var items = new HashMap<String, Double>();
     items.put("A", 50d);
@@ -38,7 +69,7 @@ public class ImmutableWeightedCollectionTest {
     var wc = ImmutableWeightedCollection.fromUnnormalisedDoubleProbability(items);
 
     int[] t = new int[4];
-    for (int i = 0; i < 1_000_000; i++) {
+    for (int i = 0; i < ITER; i++) {
       switch (wc.next()) {
         case "A" -> t[0]++;
         case "B" -> t[1]++;
@@ -47,8 +78,9 @@ public class ImmutableWeightedCollectionTest {
       }
     }
     System.out.println(Arrays.toString(t));
+    assertEquals(ITER, IntStream.of(t).sum());
   }
-  
+
   @Test
   public void fromUnnormalisedIntegerProbability() {
     var items = new HashMap<String, Integer>();
@@ -59,7 +91,7 @@ public class ImmutableWeightedCollectionTest {
     var wc = ImmutableWeightedCollection.fromUnnormalisedIntegerProbability(items);
 
     int[] t = new int[4];
-    for (int i = 0; i < 1_000_000; i++) {
+    for (int i = 0; i < ITER; i++) {
       switch (wc.next()) {
         case "A" -> t[0]++;
         case "B" -> t[1]++;
@@ -68,6 +100,7 @@ public class ImmutableWeightedCollectionTest {
       }
     }
     System.out.println(Arrays.toString(t));
+    assertEquals(ITER, IntStream.of(t).sum());
   }
 
   @Test
@@ -77,7 +110,7 @@ public class ImmutableWeightedCollectionTest {
     var wc = new ImmutableWeightedCollection<String>(items, probs);
 
     int[] t = new int[4];
-    for (int i = 0; i < 1_000_000; i++) {
+    for (int i = 0; i < ITER; i++) {
       switch (wc.next()) {
         case "A" -> t[0]++;
         case "B" -> t[1]++;
@@ -86,6 +119,7 @@ public class ImmutableWeightedCollectionTest {
       }
     }
     System.out.println(Arrays.toString(t));
+    assertEquals(ITER, IntStream.of(t).sum());
   }
 
 }
