@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -15,11 +16,45 @@ public class ImmutableWeightedCollection<T> {
   private final int[] alias;
   private final double[] prob;
 
+  public static <T> ImmutableWeightedCollection<T> fromUnnormalisedDoubleProbability(
+      Map<T, Double> itemsWithProbability) {
+    if (itemsWithProbability.isEmpty()) {
+      throw new IllegalArgumentException("Items cannot be empty.");
+    }
+
+    double sum = itemsWithProbability.values().stream().collect(Collectors.summingDouble(d -> d));
+
+    for (Entry<T, Double> item : itemsWithProbability.entrySet()) {
+      item.setValue(item.getValue() / sum);
+    }
+
+    return new ImmutableWeightedCollection<T>(itemsWithProbability);
+  }
+
+  public static <T> ImmutableWeightedCollection<T> fromUnnormalisedIntegerProbability(
+      Map<T, Integer> itemsWithProbability) {
+    if (itemsWithProbability.isEmpty()) {
+      throw new IllegalArgumentException("Items cannot be empty.");
+    }
+
+    long sum = itemsWithProbability.values().stream().collect(Collectors.summingInt(i -> i));
+
+    Map<T, Double> items = new HashMap<>(itemsWithProbability.size());
+    for (Entry<T, Integer> item : itemsWithProbability.entrySet()) {
+      items.put(item.getKey(), (double) item.getValue() / sum);
+    }
+
+    return new ImmutableWeightedCollection<T>(items);
+  }
+
   public ImmutableWeightedCollection(Map<T, Double> itemsWithProbability) {
     this(itemsWithProbability.keySet(), new ArrayList<Double>(itemsWithProbability.values()));
   }
 
   public ImmutableWeightedCollection(Set<T> items, List<Double> probabilities) {
+    if (items.isEmpty() || probabilities.isEmpty()) {
+      throw new IllegalArgumentException("Items cannot be empty.");
+    }
     if (items.size() != probabilities.size()) {
       throw new IllegalArgumentException("Items and probabilities must be the same size");
     }
