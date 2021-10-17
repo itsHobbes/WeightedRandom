@@ -20,10 +20,10 @@ var wc = new ImmutableWeightedCollection<String>(items, probs);
 int[] t = new int[4];
 for (int i = 0; i < ITER; i++) {
     switch (wc.next()) {
-    case "A" -> t[0]++;
-    case "B" -> t[1]++;
-    case "C" -> t[2]++;
-    case "D" -> t[3]++;
+        case "A" -> t[0]++;
+        case "B" -> t[1]++;
+        case "C" -> t[2]++;
+        case "D" -> t[3]++;
     }
 }
 System.out.println(Arrays.toString(t));
@@ -42,10 +42,10 @@ var wc = new ImmutableWeightedCollection<String>(items);
 int[] t = new int[4];
 for (int i = 0; i < ITER; i++) {
     switch (wc.next()) {
-    case "A" -> t[0]++;
-    case "B" -> t[1]++;
-    case "C" -> t[2]++;
-    case "D" -> t[3]++;
+        case "A" -> t[0]++;
+        case "B" -> t[1]++;
+        case "C" -> t[2]++;
+        case "D" -> t[3]++;
     }
 }
 System.out.println(Arrays.toString(t));
@@ -67,10 +67,10 @@ var wc = ImmutableWeightedCollection.fromUnnormalisedDoubleProbability(items);
 int[] t = new int[4];
 for (int i = 0; i < ITER; i++) {
     switch (wc.next()) {
-    case "A" -> t[0]++;
-    case "B" -> t[1]++;
-    case "C" -> t[2]++;
-    case "D" -> t[3]++;
+        case "A" -> t[0]++;
+        case "B" -> t[1]++;
+        case "C" -> t[2]++;
+        case "D" -> t[3]++;
     }
 }
 System.out.println(Arrays.toString(t));
@@ -87,10 +87,10 @@ var wc = ImmutableWeightedCollection.fromUnnormalisedIntegerProbability(items);
 int[] t = new int[4];
 for (int i = 0; i < ITER; i++) {
     switch (wc.next()) {
-    case "A" -> t[0]++;
-    case "B" -> t[1]++;
-    case "C" -> t[2]++;
-    case "D" -> t[3]++;
+        case "A" -> t[0]++;
+        case "B" -> t[1]++;
+        case "C" -> t[2]++;
+        case "D" -> t[3]++;
     }
 }
 System.out.println(Arrays.toString(t));
