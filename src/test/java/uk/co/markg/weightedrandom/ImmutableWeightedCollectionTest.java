@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +15,7 @@ public class ImmutableWeightedCollectionTest {
 
   @Test
   public void probabilitiesHigherThanOne() {
-    var items = Set.of("A", "B", "C", "D");
+    var items = List.of("A", "B", "C", "D");
     var probs = List.of(.5d, .33333d, .083333d, .183333d);
     var exception = assertThrows(IllegalArgumentException.class,
         () -> new ImmutableWeightedCollection<String>(items, probs));
@@ -26,7 +24,7 @@ public class ImmutableWeightedCollectionTest {
 
   @Test
   public void mismatchItemAndProbabilitySizes() {
-    var items = Set.of("A", "B", "C", "D", "E");
+    var items = List.of("A", "B", "C", "D", "E");
     var probs = List.of(.5d, .33333d, .083333d, .083333d);
     var exception = assertThrows(IllegalArgumentException.class,
         () -> new ImmutableWeightedCollection<String>(items, probs));
@@ -35,7 +33,7 @@ public class ImmutableWeightedCollectionTest {
 
   @Test
   public void newInstanceEmptyItemList() {
-    var items = new HashSet<String>();
+    var items = new ArrayList<String>();
     var probs = List.of(.5d, .25d, .125d, .125d);
     var exception = assertThrows(IllegalArgumentException.class,
         () -> new ImmutableWeightedCollection<String>(items, probs));
@@ -44,7 +42,7 @@ public class ImmutableWeightedCollectionTest {
 
   @Test
   public void newInstanceEmptyProbsList() {
-    var items = Set.of("A", "B", "C", "D");
+    var items = List.of("A", "B", "C", "D");
     var probs = new ArrayList<Double>();
     var exception = assertThrows(IllegalArgumentException.class,
         () -> new ImmutableWeightedCollection<String>(items, probs));
@@ -105,7 +103,7 @@ public class ImmutableWeightedCollectionTest {
 
   @Test
   public void test() {
-    var items = Set.of("A", "B", "C", "D");
+    var items = List.of("A", "B", "C", "D");
     var probs = List.of(.5d, .25d, .125d, .125d);
     var wc = new ImmutableWeightedCollection<String>(items, probs);
 

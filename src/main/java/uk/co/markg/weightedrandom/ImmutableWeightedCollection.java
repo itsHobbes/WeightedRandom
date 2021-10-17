@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -16,6 +15,14 @@ public class ImmutableWeightedCollection<T> {
   private final int[] alias;
   private final double[] prob;
 
+  /**
+   * Static factory method to create a new {@link ImmutableWeightedCollection} from a {@link Map} of
+   * unnormalised {@link Double} probabilities
+   * 
+   * @param <T> The type of the elements that the probability matches to
+   * @param itemsWithProbability The map of items and their unnormalised probabilities
+   * @return An {@link ImmutableWeightedCollection} representing the items and their probabilities
+   */
   public static <T> ImmutableWeightedCollection<T> fromUnnormalisedDoubleProbability(
       Map<T, Double> itemsWithProbability) {
     if (itemsWithProbability.isEmpty()) {
@@ -31,6 +38,14 @@ public class ImmutableWeightedCollection<T> {
     return new ImmutableWeightedCollection<T>(itemsWithProbability);
   }
 
+  /**
+   * Static factory method to create a new {@link ImmutableWeightedCollection} from a {@link Map} of
+   * unnormalised {@link Integer} probabilities
+   * 
+   * @param <T> The type of the elements that the probability matches to
+   * @param itemsWithProbability The map of items and their unnormalised probabilities
+   * @return An {@link ImmutableWeightedCollection} representing the items and their probabilities
+   */
   public static <T> ImmutableWeightedCollection<T> fromUnnormalisedIntegerProbability(
       Map<T, Integer> itemsWithProbability) {
     if (itemsWithProbability.isEmpty()) {
@@ -47,11 +62,26 @@ public class ImmutableWeightedCollection<T> {
     return new ImmutableWeightedCollection<T>(items);
   }
 
+  /**
+   * Creates a new {@link ImmutableWeightedCollection} from a {@link Map} of items with normalised
+   * probabilities
+   * 
+   * @param itemsWithProbability The {@link Map} of items with normalised probabilities
+   */
   public ImmutableWeightedCollection(Map<T, Double> itemsWithProbability) {
-    this(itemsWithProbability.keySet(), new ArrayList<Double>(itemsWithProbability.values()));
+    this(new ArrayList<>(itemsWithProbability.keySet()),
+        new ArrayList<Double>(itemsWithProbability.values()));
   }
 
-  public ImmutableWeightedCollection(Set<T> items, List<Double> probabilities) {
+  /**
+   * Creates a new {@link ImmutableWeightedCollection} from a {@link List} of items and {@link List}
+   * of probabilities. Note that the order of the items in the List should match the order of the
+   * probabilities
+   * 
+   * @param items The {@link List} of items
+   * @param probabilities The {@link List} of probabilities
+   */
+  public ImmutableWeightedCollection(List<T> items, List<Double> probabilities) {
     if (items.isEmpty() || probabilities.isEmpty()) {
       throw new IllegalArgumentException("Items cannot be empty.");
     }
@@ -71,12 +101,23 @@ public class ImmutableWeightedCollection<T> {
     buildBuckets(new ArrayList<T>(items), new ArrayList<Double>(probabilities));
   }
 
+  /**
+   * Generate a new random number and return it
+   * 
+   * @return the random number
+   */
   public T next() {
     int column = ThreadLocalRandom.current().nextInt(prob.length);
     boolean coinToss = ThreadLocalRandom.current().nextDouble() < prob[column];
     return map.get(coinToss ? column : alias[column]);
   }
 
+  /**
+   * Implementation of Vose's Alias Method
+   * 
+   * @param items The {@link List} of items
+   * @param probabilities The {@link List} of probabilities
+   */
   private void buildBuckets(List<T> items, List<Double> probabilities) {
     double average = 1.0 / probabilities.size();
 
