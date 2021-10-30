@@ -88,7 +88,7 @@ public class ImmutableWeightedCollection<T> {
     if (items.size() != probabilities.size()) {
       throw new IllegalArgumentException("Items and probabilities must be the same size");
     }
-    double sum = probabilities.stream().collect(Collectors.summingDouble(d -> d));
+    double sum = probabilities.stream().mapToDouble(i -> i).sum();
     if (sum > 1.0d) {
       throw new IllegalArgumentException("Probabilities sum to greater than 1");
     }
