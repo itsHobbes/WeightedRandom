@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 
-public class ImmutableWeightedCollectionTest {
+public class WeightedCollectionTest {
 
   private static final int ITER = 1_000_000;
 
@@ -18,7 +18,7 @@ public class ImmutableWeightedCollectionTest {
     var items = List.of("A", "B", "C", "D");
     var probs = List.of(.5d, .33333d, .083333d, .183333d);
     var exception = assertThrows(IllegalArgumentException.class,
-        () -> new ImmutableWeightedCollection<String>(items, probs));
+        () -> new WeightedCollection<String>(items, probs));
     assertEquals("Probabilities sum to greater than 1", exception.getMessage());
   }
 
@@ -27,7 +27,7 @@ public class ImmutableWeightedCollectionTest {
     var items = List.of("A", "B", "C", "D", "E");
     var probs = List.of(.5d, .33333d, .083333d, .083333d);
     var exception = assertThrows(IllegalArgumentException.class,
-        () -> new ImmutableWeightedCollection<String>(items, probs));
+        () -> new WeightedCollection<String>(items, probs));
     assertEquals("Items and probabilities must be the same size", exception.getMessage());
   }
 
@@ -36,7 +36,7 @@ public class ImmutableWeightedCollectionTest {
     var items = new ArrayList<String>();
     var probs = List.of(.5d, .25d, .125d, .125d);
     var exception = assertThrows(IllegalArgumentException.class,
-        () -> new ImmutableWeightedCollection<String>(items, probs));
+        () -> new WeightedCollection<String>(items, probs));
     assertEquals("Items cannot be empty.", exception.getMessage());
   }
 
@@ -45,7 +45,7 @@ public class ImmutableWeightedCollectionTest {
     var items = List.of("A", "B", "C", "D");
     var probs = new ArrayList<Double>();
     var exception = assertThrows(IllegalArgumentException.class,
-        () -> new ImmutableWeightedCollection<String>(items, probs));
+        () -> new WeightedCollection<String>(items, probs));
     assertEquals("Items cannot be empty.", exception.getMessage());
   }
 
@@ -53,7 +53,7 @@ public class ImmutableWeightedCollectionTest {
   public void fromUnnormalisedDoubleEmptyMap() {
     var items = new HashMap<String, Double>();
     var exception = assertThrows(IllegalArgumentException.class,
-        () -> ImmutableWeightedCollection.fromUnnormalisedDoubleProbability(items));
+        () -> WeightedCollection.fromUnnormalisedDoubleProbability(items));
     assertEquals("Items cannot be empty.", exception.getMessage());
   }
 
@@ -64,7 +64,7 @@ public class ImmutableWeightedCollectionTest {
     items.put("B", 25d);
     items.put("C", 12.5d);
     items.put("D", 12.5d);
-    var wc = ImmutableWeightedCollection.fromUnnormalisedDoubleProbability(items);
+    var wc = WeightedCollection.fromUnnormalisedDoubleProbability(items);
 
     int[] t = new int[4];
     for (int i = 0; i < ITER; i++) {
@@ -86,7 +86,7 @@ public class ImmutableWeightedCollectionTest {
     items.put("B", 50);
     items.put("C", 25);
     items.put("D", 25);
-    var wc = ImmutableWeightedCollection.fromUnnormalisedIntegerProbability(items);
+    var wc = WeightedCollection.fromUnnormalisedIntegerProbability(items);
 
     int[] t = new int[4];
     for (int i = 0; i < ITER; i++) {
@@ -105,7 +105,7 @@ public class ImmutableWeightedCollectionTest {
   public void test() {
     var items = List.of("A", "B", "C", "D");
     var probs = List.of(.5d, .25d, .125d, .125d);
-    var wc = new ImmutableWeightedCollection<String>(items, probs);
+    var wc = new WeightedCollection<String>(items, probs);
 
     int[] t = new int[4];
     for (int i = 0; i < ITER; i++) {

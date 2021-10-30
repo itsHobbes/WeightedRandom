@@ -9,21 +9,21 @@ import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-public class ImmutableWeightedCollection<T> {
+public class WeightedCollection<T> {
 
   private final Map<Integer, T> map;
   private final int[] alias;
   private final double[] prob;
 
   /**
-   * Static factory method to create a new {@link ImmutableWeightedCollection} from a {@link Map} of
+   * Static factory method to create a new {@link WeightedCollection} from a {@link Map} of
    * unnormalised {@link Double} probabilities
    * 
    * @param <T> The type of the elements that the probability matches to
    * @param itemsWithProbability The map of items and their unnormalised probabilities
-   * @return An {@link ImmutableWeightedCollection} representing the items and their probabilities
+   * @return An {@link WeightedCollection} representing the items and their probabilities
    */
-  public static <T> ImmutableWeightedCollection<T> fromUnnormalisedDoubleProbability(
+  public static <T> WeightedCollection<T> fromUnnormalisedDoubleProbability(
       Map<T, Double> itemsWithProbability) {
     if (itemsWithProbability.isEmpty()) {
       throw new IllegalArgumentException("Items cannot be empty.");
@@ -35,18 +35,18 @@ public class ImmutableWeightedCollection<T> {
       item.setValue(item.getValue() / sum);
     }
 
-    return new ImmutableWeightedCollection<T>(itemsWithProbability);
+    return new WeightedCollection<T>(itemsWithProbability);
   }
 
   /**
-   * Static factory method to create a new {@link ImmutableWeightedCollection} from a {@link Map} of
+   * Static factory method to create a new {@link WeightedCollection} from a {@link Map} of
    * unnormalised {@link Integer} probabilities
    * 
    * @param <T> The type of the elements that the probability matches to
    * @param itemsWithProbability The map of items and their unnormalised probabilities
-   * @return An {@link ImmutableWeightedCollection} representing the items and their probabilities
+   * @return An {@link WeightedCollection} representing the items and their probabilities
    */
-  public static <T> ImmutableWeightedCollection<T> fromUnnormalisedIntegerProbability(
+  public static <T> WeightedCollection<T> fromUnnormalisedIntegerProbability(
       Map<T, Integer> itemsWithProbability) {
     if (itemsWithProbability.isEmpty()) {
       throw new IllegalArgumentException("Items cannot be empty.");
@@ -59,29 +59,29 @@ public class ImmutableWeightedCollection<T> {
       items.put(item.getKey(), (double) item.getValue() / sum);
     }
 
-    return new ImmutableWeightedCollection<T>(items);
+    return new WeightedCollection<T>(items);
   }
 
   /**
-   * Creates a new {@link ImmutableWeightedCollection} from a {@link Map} of items with normalised
+   * Creates a new {@link WeightedCollection} from a {@link Map} of items with normalised
    * probabilities
    * 
    * @param itemsWithProbability The {@link Map} of items with normalised probabilities
    */
-  public ImmutableWeightedCollection(Map<T, Double> itemsWithProbability) {
+  public WeightedCollection(Map<T, Double> itemsWithProbability) {
     this(new ArrayList<>(itemsWithProbability.keySet()),
         new ArrayList<Double>(itemsWithProbability.values()));
   }
 
   /**
-   * Creates a new {@link ImmutableWeightedCollection} from a {@link List} of items and {@link List}
+   * Creates a new {@link WeightedCollection} from a {@link List} of items and {@link List}
    * of probabilities. Note that the order of the items in the List should match the order of the
    * probabilities
    * 
    * @param items The {@link List} of items
    * @param probabilities The {@link List} of probabilities
    */
-  public ImmutableWeightedCollection(List<T> items, List<Double> probabilities) {
+  public WeightedCollection(List<T> items, List<Double> probabilities) {
     if (items.isEmpty() || probabilities.isEmpty()) {
       throw new IllegalArgumentException("Items cannot be empty.");
     }
